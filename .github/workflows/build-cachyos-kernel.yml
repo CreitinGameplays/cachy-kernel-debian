@@ -260,7 +260,7 @@ jobs:
         run: |
           set -euxo pipefail
           export KBUILD_BUILD_USER="github-actions"
-          export KBUILD_BUILD_HOST="debian-cachyos"
+          export KBUILD_BUILD_HOST="users.noreply.github.com"
           export KDEB_PKGVERSION="${{ steps.cachyos.outputs.pkgver }}-${{ github.run_number }}"
           export KDEB_COMPRESS=xz
           fakeroot make -j"$(nproc)" bindeb-pkg
@@ -275,7 +275,7 @@ jobs:
           shopt -s nullglob
           debs=(artifacts/*.deb)
           test "${#debs[@]}" -gt 0
-          image_debs=(artifacts/linux-image-*.deb)
+          mapfile -t image_debs < <(find artifacts -maxdepth 1 -type f -name 'linux-image-*.deb' ! -name '*-dbg_*' ! -name '*-dbg-*.deb' | sort -V)
           header_debs=(artifacts/linux-headers-*.deb)
           test "${#image_debs[@]}" -gt 0
           test "${#header_debs[@]}" -gt 0
@@ -283,7 +283,10 @@ jobs:
           for deb in "${debs[@]}"; do
             dpkg-deb --info "$deb"
             dpkg-deb --contents "$deb" > "${deb}.contents.txt"
-            lintian --fail-on error "$deb"
+            lintian \
+              --fail-on error \
+              --suppress-tags unstripped-binary-or-object \
+              "$deb"
           done
 
           rm -rf package-check
@@ -300,7 +303,7 @@ jobs:
         if: ${{ env.RUN_QEMU_SMOKE_TEST == 'true' }}
         run: |
           set -euxo pipefail
-          image_deb="$(find artifacts -maxdepth 1 -type f -name 'linux-image-*.deb' | head -n1)"
+          image_deb="$(find artifacts -maxdepth 1 -type f -name 'linux-image-*.deb' ! -name '*-dbg_*' ! -name '*-dbg-*.deb' | sort -V | head -n1)"
           rm -rf qemu-test
           mkdir -p qemu-test/root qemu-test/initramfs/{bin,dev,proc,sys}
           dpkg-deb -x "$image_deb" qemu-test/root

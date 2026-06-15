@@ -107,7 +107,8 @@ The workflow performs package validation before uploading artifacts:
 - verifies that `.deb` files were produced
 - verifies that image and header packages exist
 - inspects packages with `dpkg-deb`
-- runs `lintian --fail-on error`
+- runs `lintian --fail-on error` with a narrow allowlist for expected
+  kernel-header helper binaries
 - checks for a packaged `vmlinuz-*`
 - checks for packaged kernel modules
 - checks for installed header files
