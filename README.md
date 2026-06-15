@@ -1,10 +1,6 @@
-<table>
-  <tr>
-    <td align="center" style="border: 3px solid #6effaf; border-radius: 5px; overflow: hidden; padding: 0;">
-      <img src="assets/cachydebian.png" width="500" style="display: block;">
-    </td>
-  </tr>
-</table>
+<div style="border: 3px solid #6effaf; border-radius: 5px; overflow: hidden; display: inline-block;">
+  <img src="assets/cachydebian.png" alt="image" style="display: block;">
+</div>
 
 # CachyOS Kernel Debian Builder
 
