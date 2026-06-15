@@ -93,7 +93,9 @@ When enabled, the workflow extracts the generated kernel image package, creates 
 minimal BusyBox initramfs, and boots the kernel with QEMU. The test passes only
 if the guest reaches the init process and prints a success marker on the serial
 console. The workflow enables the 8250 serial console path in the kernel config
-so this direct QEMU boot test can report reliably.
+so this direct QEMU boot test can report reliably. The QEMU run uses TCG with
+`-cpu max`, an uncompressed initramfs, and `rdinit=/init` to avoid CI-specific
+CPU-model and initramfs decompression failures.
 
 The default is enabled for manual runs.
 
@@ -117,7 +119,7 @@ support for:
 - WireGuard and common networking features
 
 The build uses a generic x86-64 target so the resulting packages are more
-portable across Debian-based machines.
+portable across Debian-based machines and can boot under QEMU's emulated CPU.
 
 ## Validation
 
