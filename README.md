@@ -92,7 +92,8 @@ The default is `cachyos`.
 When enabled, the workflow extracts the generated kernel image package, creates a
 minimal BusyBox initramfs, and boots the kernel with QEMU. The test passes only
 if the guest reaches the init process and prints a success marker on the serial
-console.
+console. The workflow enables the 8250 serial console path in the kernel config
+so this direct QEMU boot test can report reliably.
 
 The default is enabled for manual runs.
 
